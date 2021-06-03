@@ -21,7 +21,7 @@ type Article struct {
  */
 var Articles []Article
 
-func returnSingleArticle(w http.ResponseWriter, r *http.Request) {
+func readSingleArticle(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	key := vars["id"]
 
@@ -32,8 +32,8 @@ func returnSingleArticle(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func returnAllArticles(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Endpoint his: returnAllArticles")
+func readAllArticles(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Endpoint his: readAllArticles")
 	json.NewEncoder(w).Encode(Articles)
 }
 
@@ -46,7 +46,8 @@ func handleRequests() {
 	gorillaRouter := mux.NewRouter().StrictSlash(true)
 
 	gorillaRouter.HandleFunc("/", homePage)
-	gorillaRouter.HandleFunc("/all", returnAllArticles)
+	gorillaRouter.HandleFunc("/article/{id}", readSingleArticle)
+	gorillaRouter.HandleFunc("/all", readAllArticles)
 	log.Fatal(http.ListenAndServe(":3000", gorillaRouter))
 }
 
